@@ -5,6 +5,8 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.ArrayList;
 
+import javax.sql.rowset.spi.SyncResolver;
+
 public class Servidor {
 
 	private static Socket socket;
@@ -27,13 +29,18 @@ public class Servidor {
 		Servidor servidor = new Servidor(Integer.parseInt(args[0]));
 			
 		try {
-			Socket s;
+			Socket clientSocket;
+			servidor.serverSocket = new ServerSocket(999);
 			while (true) {
 				
-				s = servidor.serverSocket.accept();
+				System.out.println("Esperando a un usuario");
 				
-				(new OyenteCliente(s)).start();
-			
+				clientSocket = servidor.serverSocket.accept();
+				clientSocket.getInputStream();
+				
+				(new OyenteCliente(clientSocket, servidor)).start();
+				(new OyenteServidor(clientSocket)).start();
+				
 			}
 			
 		} catch (IOException e) {
@@ -43,10 +50,13 @@ public class Servidor {
 
 	}
 
-	private synchronized void cargaUsuario() {
-		
+	public synchronized void cargaUsuario(Usuario u) {
+		usuarios.add(u);
 	}
 	
+	public synchronized void listaUsuarios() {
+		
+	}
 
 	
 /*

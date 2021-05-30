@@ -1,6 +1,7 @@
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.net.Socket;
 
 import tiposDeMensajes.Mensaje;
@@ -15,18 +16,23 @@ public class OyenteCliente extends Thread {
 	//		- devolver los resultados en forma de mensajes 
 	//		  que serán enviados al usuario o usuarios involucrados.
 	
-	Socket socket;
+	Socket clientSocket;
+	Servidor servidor;
 	
-	public OyenteCliente(Socket s) {
-		socket = s;
+	public OyenteCliente(Socket clientS, Servidor servInstance) {
+		clientSocket = clientS;
+		servidor = servInstance;
 	}
-	
+		
 	@Override
 	public void run() {
 				
 		try {
-			ObjectInputStream fin = null;
-			fin = new ObjectInputStream(socket.getInputStream());
+			ObjectInputStream fin;
+			fin = new ObjectInputStream(clientSocket.getInputStream());
+			
+			ObjectOutputStream fout;
+			fout = new ObjectOutputStream(clientSocket.getOutputStream());
 			
 			while (true) {
 				
@@ -35,11 +41,12 @@ public class OyenteCliente extends Thread {
 				switch(m.getTipo()) {
 				case 0:
 					//Mensaje Conexion
+					servidor.cargaUsuario(null);
 					
 					break;
 				case 1:
 					//Mensaje Lista Usuarios
-					
+					servidor.listaUsuarios();
 					break;
 				case 2:
 					//Mensaje Cerrar Conexion

@@ -20,8 +20,9 @@ public class Cliente {
 		
 		
 		try {
-			Socket socket = new Socket("a", 9999);
+			Socket socket = new Socket("localhost", 999);
 			
+			//(new OyenteServidor(socket))
 			
 			
 			
@@ -37,13 +38,13 @@ public class Cliente {
 	
 	
 
-	private void inicioSesion() {
+	private String inicioSesion() {
 		Scanner sc= new Scanner(System.in); //System.in is a standard input stream  
 		
 		System.out.println("Introduzca su nombre de usuario: ");
 		_nombreUsuario = sc.nextLine();
 		
-		
+		return _nombreUsuario;
 				
 	}
 	
