@@ -10,9 +10,11 @@ public class OyenteServidor extends Thread {
 	//	En un hilo diferente
 	
 	Socket socket;
+	Cliente cliente;
 	
-	public OyenteServidor(Socket s) {
+	public OyenteServidor(Socket s, Cliente c) {
 		socket = s;
+		cliente = c;
 	}
 	
 	@Override

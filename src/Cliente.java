@@ -12,7 +12,10 @@ import java.util.List;
 import java.util.Scanner;
 
 import tiposDeMensajes.Mensaje;
+import tiposDeMensajes.mensajesCliente.Mensaje_Cerrar_Conexion;
 import tiposDeMensajes.mensajesCliente.Mensaje_Conexion;
+import tiposDeMensajes.mensajesCliente.Mensaje_Lista_Usuarios;
+import tiposDeMensajes.mensajesCliente.Mensaje_Pedir_Fichero;
 
 public class Cliente {
 
@@ -30,7 +33,7 @@ public class Cliente {
 		try {
 			Socket socket = new Socket("localhost", 1);
 			
-			(new OyenteServidor(socket)).start();
+			(new OyenteServidor(socket, cliente)).start();
 			
 			OutputStream output = socket.getOutputStream();
 			ObjectOutputStream objectOutputStream = new ObjectOutputStream(output);
@@ -39,15 +42,35 @@ public class Cliente {
             
             System.out.println("Mensaje de conexion enviado");
             
-            			
-			Scanner sc= new Scanner(System.in); //System.in is a standard input stream  
-			
-			System.out.println("Introduzca la orden que quiera\n 1: Algo.\n 2: Otra cosa.\n 3: Salir. ");
-			String in = sc.nextLine();
-		
-			
-			
-			//(new OyenteServidor(socket))
+            boolean exit = false;
+    		
+    		while(!exit) {
+    			Scanner sc= new Scanner(System.in); //System.in is a standard input stream  
+    			
+    			System.out.println("Introduzca la orden que quiera\n 1: Consultar lista usuarios.\n 2: Pedir fichero.\n 3: Salir. ");
+    			String in = sc.nextLine();
+    			
+    			switch(in) {
+    			case "1":
+    				//Mensaje lista usuarios
+    	            objectOutputStream.writeObject(new Mensaje_Lista_Usuarios(cliente._nombreUsuario, "servidor"));
+
+    				break;
+    			case "2":
+    				//Mensaje pedir fichero
+    	            objectOutputStream.writeObject(new Mensaje_Pedir_Fichero(cliente._nombreUsuario, "servidor"));
+
+    				break;
+    			case "3":
+    				exit = true;
+    	            objectOutputStream.writeObject(new Mensaje_Cerrar_Conexion(cliente._nombreUsuario, "servidor"));
+
+    				break;
+    				
+    			default:
+    				System.err.println("Opción no válida.");
+    			}
+    		}
 			
 			
 			
@@ -72,7 +95,6 @@ public class Cliente {
 		return _nombreUsuario;
 				
 	}
-	
 	
 	/*
 	ObjectInputStream objectInput;
