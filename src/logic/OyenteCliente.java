@@ -1,11 +1,14 @@
+package logic;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
+import java.util.ArrayList;
 
 import tiposDeMensajes.Mensaje;
 import tiposDeMensajes.mensajesServidor.Mensaje_Confirmacion_Conexion;
+import tiposDeMensajes.mensajesServidor.Mensaje_Confirmacion_Lista_Usuarios;
 
 public class OyenteCliente extends Thread {
 	//	Proporciona concurrencia para las sesiones de cada usuario con el servidor
@@ -50,7 +53,12 @@ public class OyenteCliente extends Thread {
 					break;
 				case 1:
 					//Mensaje Lista Usuarios
-					servidor.listaUsuarios();
+					ArrayList<Usuario> listaUsuarios = servidor.listaUsuarios();
+					
+					System.out.println("Usuario ha pedido la lista de usuarios");
+					
+					fout.writeObject(new Mensaje_Confirmacion_Lista_Usuarios(listaUsuarios));
+					
 					break;
 				case 2:
 					//Mensaje Cerrar Conexion
@@ -58,6 +66,11 @@ public class OyenteCliente extends Thread {
 					break;
 				case 3:
 					//Mensaje Pedir Fichero
+					Usuario usuarioPropietario = servidor.buscaFichero(m.getFichero());
+					
+					//el usuario propietario actuará como servidor, abriendo un nuevo serverSocket
+					//el usuario que ha pedido el fichero se conectará y el usuario propietario
+					//procederá a mandarle el archivo.
 					
 					break;
 				case 4:

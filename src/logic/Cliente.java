@@ -1,3 +1,4 @@
+package logic;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
@@ -43,12 +44,13 @@ public class Cliente {
             System.out.println("Mensaje de conexion enviado");
             
             boolean exit = false;
-    		
+            Scanner sc= new Scanner(System.in);
+            String in;
     		while(!exit) {
-    			Scanner sc= new Scanner(System.in); //System.in is a standard input stream  
+    			 //System.in is a standard input stream  
     			
     			System.out.println("Introduzca la orden que quiera\n 1: Consultar lista usuarios.\n 2: Pedir fichero.\n 3: Salir. ");
-    			String in = sc.nextLine();
+    			 in = sc.nextLine();
     			
     			switch(in) {
     			case "1":
@@ -58,7 +60,10 @@ public class Cliente {
     				break;
     			case "2":
     				//Mensaje pedir fichero
-    	            objectOutputStream.writeObject(new Mensaje_Pedir_Fichero(cliente._nombreUsuario, "servidor"));
+    				System.out.println("Elija el fichero que quiera obtener:");
+    				String fichero = sc.nextLine();
+    				
+    	            objectOutputStream.writeObject(new Mensaje_Pedir_Fichero(cliente._nombreUsuario, fichero));
 
     				break;
     			case "3":

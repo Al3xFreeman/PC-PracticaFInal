@@ -1,12 +1,10 @@
-import java.awt.List;
+package logic;
 import java.io.IOException;
 import java.io.ObjectOutputStream;
 import java.io.OutputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.ArrayList;
-
-import javax.sql.rowset.spi.SyncResolver;
 
 public class Servidor {
 
@@ -16,7 +14,7 @@ public class Servidor {
 	private String ip = "1.1.1.2";
 	
 	//Estructuras de Usuarios
-	private ArrayList<Usuario> usuarios;
+	private ArrayList<Usuario> usuarios; //meterle a cada usuario el fin y el fout para poder realizar el pedido de ficheros
 	
 	private ServerSocket serverSocket;
 	
@@ -64,8 +62,14 @@ public class Servidor {
 		System.out.println(u.toString());
 	}
 	
-	public synchronized void listaUsuarios() {
-		
+	public synchronized ArrayList<Usuario> listaUsuarios() {
+		//Cuando añada el fin y el fout en los usuarios hacer que eso no lo envíe
+		return usuarios;
+	}
+
+	public Usuario buscaFichero(String fichero) {
+		//Busca qué usuario tiene el fichero
+		return null;
 	}
 
 	

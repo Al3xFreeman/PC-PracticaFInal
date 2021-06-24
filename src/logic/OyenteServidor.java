@@ -1,8 +1,10 @@
+package logic;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.net.Socket;
 
 import tiposDeMensajes.Mensaje;
+import tiposDeMensajes.mensajesServidor.Mensaje_Confirmacion_Lista_Usuarios;
 
 public class OyenteServidor extends Thread {
 
@@ -35,7 +37,8 @@ public class OyenteServidor extends Thread {
 					break;
 				case 1:
 					//Mensaje Confirmacion Lista Usuarios
-					
+					Mensaje_Confirmacion_Lista_Usuarios conf = (Mensaje_Confirmacion_Lista_Usuarios) m;
+					System.out.println(conf.getUsuarios());
 					break;
 				case 2:
 					//Mensaje Emitir Fichero
