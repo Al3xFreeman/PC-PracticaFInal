@@ -1,6 +1,7 @@
 import java.awt.List;
 import java.io.IOException;
 import java.io.ObjectOutputStream;
+import java.io.OutputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.ArrayList;
@@ -12,7 +13,7 @@ public class Servidor {
 	private static Socket socket;
 	
 	private int port;
-	private String ip = "1.1.1.1";
+	private String ip = "1.1.1.2";
 	
 	//Estructuras de Usuarios
 	private ArrayList<Usuario> usuarios;
@@ -20,8 +21,13 @@ public class Servidor {
 	private ServerSocket serverSocket;
 	
 	
+	//private OutputStream output = serverSocket.get
+	
 	public Servidor(int port) {
 		this.port = port;
+		
+		//Cambiar por funcion cargaUsuarios que cargue todos los usuarios registrados en un fichero
+		usuarios = new ArrayList<>();
 	}
 	
 	public static void main(String[] args) {
@@ -30,16 +36,17 @@ public class Servidor {
 			
 		try {
 			Socket clientSocket;
-			servidor.serverSocket = new ServerSocket(999);
+			servidor.serverSocket = new ServerSocket(1);
 			while (true) {
 				
 				System.out.println("Esperando a un usuario");
 				
 				clientSocket = servidor.serverSocket.accept();
-				clientSocket.getInputStream();
+				
+				System.out.println("Conexión establecida con un cliente" + clientSocket);
 				
 				(new OyenteCliente(clientSocket, servidor)).start();
-				(new OyenteServidor(clientSocket)).start();
+				
 				
 			}
 			
@@ -51,7 +58,10 @@ public class Servidor {
 	}
 
 	public synchronized void cargaUsuario(Usuario u) {
+		
 		usuarios.add(u);
+		
+		System.out.println(u.toString());
 	}
 	
 	public synchronized void listaUsuarios() {

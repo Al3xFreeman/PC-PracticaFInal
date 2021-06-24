@@ -1,6 +1,8 @@
 package tiposDeMensajes;
 
-public abstract class Mensaje {
+import java.io.Serializable;
+
+public abstract class Mensaje implements Serializable {
 	
 	protected int tipo;
 	protected String origen;

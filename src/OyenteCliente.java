@@ -5,6 +5,7 @@ import java.io.ObjectOutputStream;
 import java.net.Socket;
 
 import tiposDeMensajes.Mensaje;
+import tiposDeMensajes.mensajesServidor.Mensaje_Confirmacion_Conexion;
 
 public class OyenteCliente extends Thread {
 	//	Proporciona concurrencia para las sesiones de cada usuario con el servidor
@@ -41,7 +42,10 @@ public class OyenteCliente extends Thread {
 				switch(m.getTipo()) {
 				case 0:
 					//Mensaje Conexion
-					servidor.cargaUsuario(null);
+					servidor.cargaUsuario(new Usuario(m.getOrigen()));
+					System.out.println("Cliente conectado\n");
+					
+					fout.writeObject(new Mensaje_Confirmacion_Conexion("algo"));
 					
 					break;
 				case 1:

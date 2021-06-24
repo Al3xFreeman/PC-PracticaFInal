@@ -29,8 +29,7 @@ public class OyenteServidor extends Thread {
 				
 				switch(m.getTipo()) {
 				case 0:
-					//Mensaje Confirmacion Conexion
-					
+					System.out.println("Conexión realizada con éxito");
 					break;
 				case 1:
 					//Mensaje Confirmacion Lista Usuarios
