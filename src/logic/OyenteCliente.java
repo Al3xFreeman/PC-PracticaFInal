@@ -45,7 +45,7 @@ public class OyenteCliente extends Thread {
 				switch(m.getTipo()) {
 				case 0:
 					//Mensaje Conexion
-					servidor.cargaUsuario(new Usuario(m.getOrigen()));
+					servidor.cargaUsuario(new Usuario(m.getOrigen(), fin, fout));
 					System.out.println("Cliente conectado\n");
 					
 					fout.writeObject(new Mensaje_Confirmacion_Conexion("algo"));

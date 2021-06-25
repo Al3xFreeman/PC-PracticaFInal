@@ -14,7 +14,8 @@ public class Servidor {
 	private String ip = "1.1.1.2";
 	
 	//Estructuras de Usuarios
-	private ArrayList<Usuario> usuarios; //meterle a cada usuario el fin y el fout para poder realizar el pedido de ficheros
+	private ArrayList<Usuario> usuarios; 
+	//meterle a cada usuario el fin y el fout para poder realizar el pedido de ficheros
 	
 	private ServerSocket serverSocket;
 	
