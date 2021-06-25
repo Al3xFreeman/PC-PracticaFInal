@@ -14,7 +14,8 @@ public class Servidor {
 	private String ip = "1.1.1.2";
 	
 	//Estructuras de Usuarios
-	private ArrayList<Usuario> usuarios; 
+	private ArrayList<Usuario> usuarios;
+	private ArrayList<String> usuariosNombres; 
 	//meterle a cada usuario el fin y el fout para poder realizar el pedido de ficheros
 	
 	private ServerSocket serverSocket;
@@ -27,6 +28,7 @@ public class Servidor {
 		
 		//Cambiar por funcion cargaUsuarios que cargue todos los usuarios registrados en un fichero
 		usuarios = new ArrayList<>();
+		usuariosNombres = new ArrayList<>();
 	}
 	
 	public static void main(String[] args) {
@@ -59,18 +61,39 @@ public class Servidor {
 	public synchronized void cargaUsuario(Usuario u) {
 		
 		usuarios.add(u);
+		usuariosNombres.add(u.getNombre());
 		
 		System.out.println(u.toString());
 	}
 	
-	public synchronized ArrayList<Usuario> listaUsuarios() {
+	public synchronized ArrayList<String> listaUsuarios() {
 		//Cuando añada el fin y el fout en los usuarios hacer que eso no lo envíe
-		return usuarios;
+		
+		return usuariosNombres;
 	}
 
 	public Usuario buscaFichero(String fichero) {
 		//Busca qué usuario tiene el fichero
 		return null;
+	}
+
+	public void desconectaUsuario(String usuario) {
+		Usuario desconectar = null;
+		
+		usuariosNombres.remove(usuario);
+		
+		for(Usuario u : usuarios) {
+			if(u.getNombre().equals(usuario)) {
+				desconectar = u;
+				
+			}
+		}
+		if (desconectar != null) {
+			usuarios.remove(desconectar);
+			System.out.println("Usuario " + usuario + " eliminado de la lista de usuarios conectados");
+		} else {
+			System.out.println("El usuario no se encuentra conectado");
+		}
 	}
 
 	

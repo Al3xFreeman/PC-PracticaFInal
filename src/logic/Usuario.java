@@ -15,8 +15,8 @@ public class Usuario implements Serializable {
 	
 	public Usuario(String nombre, ObjectInputStream fin, ObjectOutputStream fout) {
 		_nombre = nombre;
-		_fin = fin;
-		_fout = fout;	
+		//_fin = fin;
+		//_fout = fout;	
 		
 		File directory = new File(_nombre);
 		if (! directory.exists()){
@@ -25,6 +25,10 @@ public class Usuario implements Serializable {
 		        // use directory.mkdirs(); here instead.
 		    }
 		
+	}
+	
+	public String getNombre() {
+		return _nombre;
 	}
 	
 	public String toString() {

@@ -26,8 +26,8 @@ public class OyenteServidor extends Thread {
 			
 			ObjectInputStream fin;
 			fin = new ObjectInputStream(socket.getInputStream());
-			
-			while (true) {
+			boolean exit = false;
+			while (!exit) {
 				
 				Mensaje m = (Mensaje) fin.readObject();
 				
@@ -50,6 +50,10 @@ public class OyenteServidor extends Thread {
 					break;
 				case 4:
 					//Mensaje Confirmacion CerrarConexion
+					exit = true;
+					cliente.desconecta(cliente);
+					
+					System.out.println(m.getOrigen() + " desconectado con éxito");
 					
 					break;
 				default:

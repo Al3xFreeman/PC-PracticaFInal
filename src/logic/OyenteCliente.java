@@ -1,4 +1,5 @@
 package logic;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.ObjectInputStream;
@@ -7,6 +8,7 @@ import java.net.Socket;
 import java.util.ArrayList;
 
 import tiposDeMensajes.Mensaje;
+import tiposDeMensajes.mensajesServidor.Mensaje_Confirmacion_Cerrar_Conexion;
 import tiposDeMensajes.mensajesServidor.Mensaje_Confirmacion_Conexion;
 import tiposDeMensajes.mensajesServidor.Mensaje_Confirmacion_Lista_Usuarios;
 
@@ -38,7 +40,9 @@ public class OyenteCliente extends Thread {
 			ObjectOutputStream fout;
 			fout = new ObjectOutputStream(clientSocket.getOutputStream());
 			
-			while (true) {
+			boolean exit = false;
+			
+			while (!exit) {
 				
 				Mensaje m = (Mensaje) fin.readObject();
 				
@@ -49,20 +53,25 @@ public class OyenteCliente extends Thread {
 					System.out.println("Cliente conectado\n");
 					
 					fout.writeObject(new Mensaje_Confirmacion_Conexion("algo"));
-					
+					fout.flush();
 					break;
 				case 1:
 					//Mensaje Lista Usuarios
-					ArrayList<Usuario> listaUsuarios = servidor.listaUsuarios();
+					ArrayList<String> listaUsuarios = servidor.listaUsuarios();
 					
 					System.out.println("Usuario ha pedido la lista de usuarios");
+					
+					//FileOutputStream fos = new FileOutputStream("listaUsuarios");
 					
 					fout.writeObject(new Mensaje_Confirmacion_Lista_Usuarios(listaUsuarios));
 					
 					break;
 				case 2:
 					//Mensaje Cerrar Conexion
+					exit = true;
+					servidor.desconectaUsuario(m.getOrigen());
 					
+					fout.writeObject(new Mensaje_Confirmacion_Cerrar_Conexion(m.getOrigen()));
 					break;
 				case 3:
 					//Mensaje Pedir Fichero

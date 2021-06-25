@@ -24,19 +24,38 @@ public class Cliente {
 	private int _ip;
 	
 	//Añadir Socket y flujos?
-	private static Socket socket; 
-		
+	private Socket socket; 
+	
+	public Socket getSocket() {
+		return socket;
+	}
+	
+	public Cliente(Socket s) {
+		socket = s;
+	}
+	
+	public Cliente() {
+		try {
+			socket = new Socket("localhost", 1);
+		} catch (UnknownHostException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	
 	public static void main(String[] args) {
 		
 		Cliente cliente = new Cliente();
 		cliente.inicioSesion();
 		
 		try {
-			Socket socket = new Socket("localhost", 1);
 			
-			(new OyenteServidor(socket, cliente)).start();
+			(new OyenteServidor(cliente.getSocket(), cliente)).start();
 			
-			OutputStream output = socket.getOutputStream();
+			OutputStream output = cliente.getSocket().getOutputStream();
 			ObjectOutputStream objectOutputStream = new ObjectOutputStream(output);
           
             objectOutputStream.writeObject(new Mensaje_Conexion(cliente._nombreUsuario, "servidor"));
@@ -44,7 +63,7 @@ public class Cliente {
             System.out.println("Mensaje de conexion enviado");
             
             boolean exit = false;
-            Scanner sc= new Scanner(System.in);
+            Scanner sc = new Scanner(System.in);
             String in;
     		while(!exit) {
     			 //System.in is a standard input stream  
@@ -75,6 +94,8 @@ public class Cliente {
     			default:
     				System.err.println("Opción no válida.");
     			}
+    			
+    			
     		}
 			
 			
@@ -99,6 +120,18 @@ public class Cliente {
 		
 		return _nombreUsuario;
 				
+	}
+
+
+
+	public void desconecta(Cliente c) {
+		try {
+			c.socket.close();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
 	}
 	
 	/*
