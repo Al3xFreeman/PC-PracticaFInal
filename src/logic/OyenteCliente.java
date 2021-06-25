@@ -60,10 +60,10 @@ public class OyenteCliente extends Thread {
 					ArrayList<String> listaUsuarios = servidor.listaUsuarios();
 					
 					System.out.println("Usuario ha pedido la lista de usuarios");
-					
+					String msgContents = listaUsuarios.toString();
 					//FileOutputStream fos = new FileOutputStream("listaUsuarios");
 					
-					fout.writeObject(new Mensaje_Confirmacion_Lista_Usuarios(listaUsuarios));
+					fout.writeObject(new Mensaje_Confirmacion_Lista_Usuarios(msgContents));
 					
 					break;
 				case 2:

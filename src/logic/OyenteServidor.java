@@ -37,8 +37,7 @@ public class OyenteServidor extends Thread {
 					break;
 				case 1:
 					//Mensaje Confirmacion Lista Usuarios
-					Mensaje_Confirmacion_Lista_Usuarios conf = (Mensaje_Confirmacion_Lista_Usuarios) m;
-					System.out.println(conf.getUsuarios());
+					System.out.println(m.getContenido());
 					break;
 				case 2:
 					//Mensaje Emitir Fichero

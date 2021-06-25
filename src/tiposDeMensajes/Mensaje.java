@@ -9,6 +9,8 @@ public abstract class Mensaje implements Serializable {
 	protected String destino;
 	protected String fichero;
 	
+	protected String contenido;
+	
 	public int getTipo() {
 		return tipo;
 	}
@@ -23,5 +25,9 @@ public abstract class Mensaje implements Serializable {
 	
 	public String getFichero() {
 		return fichero;
+	}
+	
+	public String getContenido() {
+		return contenido;
 	}
 }

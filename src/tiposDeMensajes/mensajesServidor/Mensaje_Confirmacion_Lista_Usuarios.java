@@ -9,9 +9,9 @@ import tiposDeMensajes.Mensaje;
 public class Mensaje_Confirmacion_Lista_Usuarios extends Mensaje implements Serializable {
 	private ArrayList<String> listaUsuarios;
 	
-	public Mensaje_Confirmacion_Lista_Usuarios(ArrayList<String> l) {
+	public Mensaje_Confirmacion_Lista_Usuarios(String contents) {
 		tipo = 1;
-		listaUsuarios = l;
+		contenido = contents;
 	}
 	
 	public ArrayList<String> getUsuarios() {
