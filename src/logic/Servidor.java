@@ -59,11 +59,14 @@ public class Servidor {
 	}
 
 	public synchronized void cargaUsuario(Usuario u) {
-		
-		usuarios.add(u);
-		usuariosNombres.add(u.getNombre());
-		
-		System.out.println(u.toString());
+		if(!usuariosNombres.contains(u.getNombre())) {
+			usuarios.add(u);
+			usuariosNombres.add(u.getNombre());
+			
+			System.out.println(u.toString());
+		} else {
+			System.out.println("Usuario ya estaba conectado");
+		}
 	}
 	
 	public synchronized ArrayList<String> listaUsuarios() {
