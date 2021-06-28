@@ -53,7 +53,7 @@ public class OyenteServidor extends Thread {
 					cliente.enviaMensajePreparadoClienteServidor(cliente, peticion, ip, puerto);
 					
 					//Crear proceso EMISOR y esperar en accept la conexion
-					Thread emisor = new Emisor(ip, puerto);
+					Thread emisor = new Emisor(ip, puerto, cliente, fichero);
 					
 					try {
 						

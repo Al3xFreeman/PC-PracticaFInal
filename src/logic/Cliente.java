@@ -147,6 +147,14 @@ public class Cliente {
 		}
 		
 	}
+
+	public Fichero getFichero(String fichero) {
+		//Busca el fichero a devolver
+		//En la carpeta llamada _nombreUsuario -> el nombre de fichero
+		
+		//Contruye el objeto de tipo Fichero
+		return null;
+	}
 	
 	/*
 	ObjectInputStream objectInput;
