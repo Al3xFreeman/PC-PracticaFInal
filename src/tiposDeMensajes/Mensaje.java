@@ -9,6 +9,9 @@ public abstract class Mensaje implements Serializable {
 	protected String destino;
 	protected String fichero;
 	
+	protected String ip;
+	protected int puerto;
+	
 	protected String contenido;
 	
 	public int getTipo() {
@@ -30,4 +33,14 @@ public abstract class Mensaje implements Serializable {
 	public String getContenido() {
 		return contenido;
 	}
+	
+	public String getIp() {
+		return ip;
+	}
+	
+	public int getPuerto() {
+		return puerto;
+	}
+	
+	
 }

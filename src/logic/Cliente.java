@@ -17,6 +17,7 @@ import tiposDeMensajes.mensajesCliente.Mensaje_Cerrar_Conexion;
 import tiposDeMensajes.mensajesCliente.Mensaje_Conexion;
 import tiposDeMensajes.mensajesCliente.Mensaje_Lista_Usuarios;
 import tiposDeMensajes.mensajesCliente.Mensaje_Pedir_Fichero;
+import tiposDeMensajes.mensajesCliente.Mensaje_Preparado_ClienteServidor;
 
 public class Cliente {
 
@@ -46,6 +47,9 @@ public class Cliente {
 		}
 	}
 	
+	public OutputStream output;
+	public ObjectOutputStream objectOutputStream;
+	
 	public static void main(String[] args) {
 		
 		Cliente cliente = new Cliente();
@@ -55,10 +59,10 @@ public class Cliente {
 			
 			(new OyenteServidor(cliente.getSocket(), cliente)).start();
 			
-			OutputStream output = cliente.getSocket().getOutputStream();
-			ObjectOutputStream objectOutputStream = new ObjectOutputStream(output);
+			cliente.output = cliente.getSocket().getOutputStream();
+			cliente.objectOutputStream = new ObjectOutputStream(cliente.output);
           
-            objectOutputStream.writeObject(new Mensaje_Conexion(cliente._nombreUsuario, "servidor"));
+            cliente.objectOutputStream.writeObject(new Mensaje_Conexion(cliente._nombreUsuario, "servidor"));
             
             System.out.println("Mensaje de conexion enviado");
             
@@ -74,7 +78,7 @@ public class Cliente {
     			switch(in) {
     			case "1":
     				//Mensaje lista usuarios
-    	            objectOutputStream.writeObject(new Mensaje_Lista_Usuarios(cliente._nombreUsuario, "servidor"));
+    				cliente.objectOutputStream.writeObject(new Mensaje_Lista_Usuarios(cliente._nombreUsuario, "servidor"));
 
     				break;
     			case "2":
@@ -82,12 +86,12 @@ public class Cliente {
     				System.out.println("Elija el fichero que quiera obtener:");
     				String fichero = sc.nextLine();
     				
-    	            objectOutputStream.writeObject(new Mensaje_Pedir_Fichero(cliente._nombreUsuario, fichero));
+    				cliente.objectOutputStream.writeObject(new Mensaje_Pedir_Fichero(cliente._nombreUsuario, fichero));
 
     				break;
     			case "3":
     				exit = true;
-    	            objectOutputStream.writeObject(new Mensaje_Cerrar_Conexion(cliente._nombreUsuario, "servidor"));
+    				cliente.objectOutputStream.writeObject(new Mensaje_Cerrar_Conexion(cliente._nombreUsuario, "servidor"));
 
     				break;
     				
@@ -127,6 +131,16 @@ public class Cliente {
 	public void desconecta(Cliente c) {
 		try {
 			c.socket.close();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+	}
+
+	public void enviaMensajePreparadoClienteServidor(Cliente cliente, String peticion, String ip, int puerto) {
+		try {
+			cliente.objectOutputStream.writeObject(new Mensaje_Preparado_ClienteServidor(peticion, ip, puerto));
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

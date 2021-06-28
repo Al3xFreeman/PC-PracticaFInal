@@ -27,6 +27,9 @@ public class OyenteServidor extends Thread {
 			ObjectInputStream fin;
 			fin = new ObjectInputStream(socket.getInputStream());
 			boolean exit = false;
+			String ip;
+			int puerto;
+			
 			while (!exit) {
 				
 				Mensaje m = (Mensaje) fin.readObject();
@@ -41,10 +44,42 @@ public class OyenteServidor extends Thread {
 					break;
 				case 2:
 					//Mensaje Emitir Fichero
+					String peticion = m.getOrigen();
+					String fichero = m.getFichero();
+					
+					ip = "192.168.0.1";
+					puerto = 9;
+					
+					cliente.enviaMensajePreparadoClienteServidor(cliente, peticion, ip, puerto);
+					
+					//Crear proceso EMISOR y esperar en accept la conexion
+					Thread emisor = new Emisor(ip, puerto);
+					
+					try {
+						
+						emisor.start();
+						emisor.join();
+						
+					} catch (InterruptedException e) { e.printStackTrace(); }
+					
+					
 					
 					break;
 				case 3:
 					//Mensaje Preparado ServidorCliente
+					//llega ip y puerto del propietario del fichero
+					ip = m.getIp();
+					puerto = m.getPuerto();
+					//Crear proceso RECEPTOR
+					Thread receptor = new Receptor(ip, puerto);
+					
+					try {
+						
+						receptor.start();
+						receptor.join();
+						
+					} catch (InterruptedException e) { e.printStackTrace(); }
+					
 					
 					break;
 				case 4:

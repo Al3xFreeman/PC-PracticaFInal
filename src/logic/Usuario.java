@@ -31,6 +31,14 @@ public class Usuario implements Serializable {
 		return _nombre;
 	}
 	
+	public ObjectOutputStream getfOut() {
+		return _fout;
+	}
+	
+	public ObjectInputStream getfIn() {
+		return _fin;
+	}
+	
 	public String toString() {
 		return "Usuario:" + _nombre;
 	}

@@ -4,10 +4,11 @@ import tiposDeMensajes.Mensaje;
 
 public class Mensaje_Preparado_ClienteServidor extends Mensaje {
 
-	public Mensaje_Preparado_ClienteServidor(String o, String d) {
+	public Mensaje_Preparado_ClienteServidor(String o, String ip, int puerto) {
 		tipo = 4;
 		origen = o;
-		destino = d;
+		this.ip = ip;
+		this.puerto = puerto;
 	}
 
 }

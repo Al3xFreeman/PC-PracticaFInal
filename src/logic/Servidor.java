@@ -69,10 +69,8 @@ public class Servidor {
 		}
 	}
 	
-	public synchronized ArrayList<String> listaUsuarios() {
-		//Cuando añada el fin y el fout en los usuarios hacer que eso no lo envíe
-		
-		return usuariosNombres;
+	public synchronized String listaUsuarios() {		
+		return usuarios.toString();
 	}
 
 	public Usuario buscaFichero(String fichero) {
@@ -97,6 +95,13 @@ public class Servidor {
 		} else {
 			System.out.println("El usuario no se encuentra conectado");
 		}
+	}
+
+	public ObjectOutputStream buscarCliente(String origen) {
+		//Devuelve el fOut del cliente
+		
+		return null;
+		
 	}
 
 	
