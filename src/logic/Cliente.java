@@ -1,4 +1,5 @@
 package logic;
+import java.io.File;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
@@ -8,6 +9,9 @@ import java.io.Writer;
 import java.net.ConnectException;
 import java.net.Socket;
 import java.net.UnknownHostException;
+import java.nio.file.CopyOption;
+import java.nio.file.Files;
+import java.nio.file.StandardCopyOption;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
@@ -21,6 +25,7 @@ import tiposDeMensajes.mensajesCliente.Mensaje_Preparado_ClienteServidor;
 
 public class Cliente {
 
+	String path;
 	private String _nombreUsuario;
 	private int _ip;
 	
@@ -121,7 +126,7 @@ public class Cliente {
 		
 		System.out.println("Introduzca su nombre de usuario: ");
 		_nombreUsuario = sc.nextLine();
-		
+		path = "_nombreUsuario/";
 		return _nombreUsuario;
 				
 	}
@@ -154,6 +159,26 @@ public class Cliente {
 		
 		//Contruye el objeto de tipo Fichero
 		return null;
+	}
+
+	public void addFile(Cliente c, File f) {
+		//Añade el archivo al ssitema de archivos
+		File target = new File(c.getName() + File.separator + f.getName());
+		
+		try {
+			Files.copy(f.toPath(), target.toPath(), StandardCopyOption.REPLACE_EXISTING, StandardCopyOption.COPY_ATTRIBUTES);
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	
+	public String getPath() {
+		return path;
+	}
+	
+	public String getName() {
+		return _nombreUsuario;
 	}
 	
 	/*

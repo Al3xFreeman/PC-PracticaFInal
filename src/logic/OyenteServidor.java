@@ -1,4 +1,5 @@
 package logic;
+import java.io.File;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.net.Socket;
@@ -45,7 +46,7 @@ public class OyenteServidor extends Thread {
 				case 2:
 					//Mensaje Emitir Fichero
 					String peticion = m.getOrigen();
-					String fichero = m.getFichero();
+					File file = m.getFile();
 					
 					ip = "192.168.0.1";
 					puerto = 9;
@@ -53,7 +54,7 @@ public class OyenteServidor extends Thread {
 					cliente.enviaMensajePreparadoClienteServidor(cliente, peticion, ip, puerto);
 					
 					//Crear proceso EMISOR y esperar en accept la conexion
-					Thread emisor = new Emisor(ip, puerto, cliente, fichero);
+					Thread emisor = new Emisor(ip, puerto, cliente, file);
 					
 					try {
 						
@@ -71,7 +72,7 @@ public class OyenteServidor extends Thread {
 					ip = m.getIp();
 					puerto = m.getPuerto();
 					//Crear proceso RECEPTOR
-					Thread receptor = new Receptor(ip, puerto);
+					Thread receptor = new Receptor(ip, puerto, cliente);
 					
 					try {
 						

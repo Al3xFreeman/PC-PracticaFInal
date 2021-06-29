@@ -9,22 +9,38 @@ public class Usuario implements Serializable {
 	private int _id;
 	private int _ip;
 	private String _nombre;
-	private ArrayList<Fichero> _archivos;
+//	private ArrayList<Fichero> _archivos;
+	private ArrayList<File> _archivos;
 	private ObjectInputStream _fin;
 	private ObjectOutputStream _fout;
 	
 	public Usuario(String nombre, ObjectInputStream fin, ObjectOutputStream fout) {
 		_nombre = nombre;
-		//_fin = fin;
-		//_fout = fout;	
+		_fin = fin;
+		_fout = fout;
+		_archivos = new ArrayList<File>();
 		
-		File directory = new File(_nombre);
-		if (! directory.exists()){
-			directory.mkdir();
-		        // If you require it to make the entire directory path including parents,
-		        // use directory.mkdirs(); here instead.
-		    }
+		File dir = new File(_nombre);
+		if (!dir.exists()) {
+			dir.mkdir();
+		} else { //Escanea los contenidos para añadirlos a la lista de archivos
+			getFiles(dir);
+		}
+	}
+	
+	public ArrayList<File> getArchivos() {
+		return _archivos;
+	}
+	
+	private void getFiles(File dir) {
+		File[] contenido = dir.listFiles();
 		
+		for(File f : contenido)
+			if(f.isFile()) 
+				_archivos.add(f);
+			else if (f.isDirectory())
+				getFiles(f);
+				
 	}
 	
 	public String getNombre() {

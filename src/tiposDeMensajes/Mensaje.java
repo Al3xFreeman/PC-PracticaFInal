@@ -1,5 +1,6 @@
 package tiposDeMensajes;
 
+import java.io.File;
 import java.io.Serializable;
 
 public abstract class Mensaje implements Serializable {
@@ -8,6 +9,7 @@ public abstract class Mensaje implements Serializable {
 	protected String origen;
 	protected String destino;
 	protected String fichero;
+	protected File file;
 	
 	protected String ip;
 	protected int puerto;
@@ -28,6 +30,10 @@ public abstract class Mensaje implements Serializable {
 	
 	public String getFichero() {
 		return fichero;
+	}
+	
+	public File getFile() {
+		return file;
 	}
 	
 	public String getContenido() {

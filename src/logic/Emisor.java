@@ -1,5 +1,6 @@
 package logic;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.ObjectOutputStream;
 import java.net.ServerSocket;
@@ -10,16 +11,16 @@ public class Emisor  extends Thread {
 	private String ip;
 	private int puerto;
 	private Cliente cliente;
-	private String fichero;
+	private File file;
 	
 	private ServerSocket serverSocket;
 
 	
-	public Emisor(String ip, int puerto, Cliente c, String f) {
+	public Emisor(String ip, int puerto, Cliente c, File f) {
 		this.ip = ip;
 		this.puerto = puerto;
 		cliente = c;
-		fichero = f;
+		file = f;
 	}
 
 	public void run() {
@@ -37,7 +38,7 @@ public class Emisor  extends Thread {
 			fout = new ObjectOutputStream(clientSocket.getOutputStream());
 			
 			//Enviar el fichero
-			fout.writeObject(cliente.getFichero(fichero));
+			fout.writeObject(file);
 			
 		} catch (IOException e) {
 			// TODO Auto-generated catch block

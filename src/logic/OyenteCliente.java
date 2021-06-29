@@ -1,4 +1,5 @@
 package logic;
+import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -75,12 +76,17 @@ public class OyenteCliente extends Thread {
 					break;
 				case 3:
 					//Mensaje Pedir Fichero
-					Usuario usuarioPropietario = servidor.buscaFichero(m.getFichero());
+					Usuario usuarioPropietario = servidor.buscaUsuarioFichero(m.getFichero());
+					if(usuarioPropietario == null) {
+						//Usuario o archivo no encontrado
+					}
 					
 					String usuarioPeticion = m.getOrigen();
 					String fichero = m.getFichero();
 					
-					usuarioPropietario.getfOut().writeObject(new Mensaje_Emitir_Fichero(usuarioPeticion, fichero));
+					File file = servidor.getFile(fichero);
+					
+					usuarioPropietario.getfOut().writeObject(new Mensaje_Emitir_Fichero(usuarioPeticion, file));
 					
 					//el usuario propietario actuará como servidor, abriendo un nuevo serverSocket
 					//el usuario que ha pedido el fichero se conectará y el usuario propietario

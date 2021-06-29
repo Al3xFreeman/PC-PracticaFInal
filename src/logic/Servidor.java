@@ -1,4 +1,5 @@
 package logic;
+import java.io.File;
 import java.io.IOException;
 import java.io.ObjectOutputStream;
 import java.io.OutputStream;
@@ -73,8 +74,12 @@ public class Servidor {
 		return usuarios.toString();
 	}
 
-	public Usuario buscaFichero(String fichero) {
-		//Busca qué usuario tiene el fichero
+	public Usuario buscaUsuarioFichero(String fichero) {
+		for(Usuario u : usuarios)
+			for(File f : u.getArchivos())
+				if(f.getName().equals(fichero))
+					return u;
+		
 		return null;
 	}
 
@@ -98,10 +103,21 @@ public class Servidor {
 	}
 
 	public ObjectOutputStream buscarCliente(String origen) {
-		//Devuelve el fOut del cliente
+
+		for(Usuario u : usuarios)
+			if(u.getNombre().equals(origen))
+				return u.getfOut();
 		
 		return null;
 		
+	}
+
+	public File getFile(String fichero) {
+		for(Usuario u : usuarios)
+			for(File f : u.getArchivos())
+				if(f.getName().equals(fichero))
+					return f;
+		return null;
 	}
 
 	
