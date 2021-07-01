@@ -49,7 +49,7 @@ public class OyenteServidor extends Thread {
 					File file = m.getFile();
 					
 					ip = "192.168.0.1";
-					puerto = 9;
+					puerto = cliente.puertoLibre();
 					
 					cliente.enviaMensajePreparadoClienteServidor(cliente, peticion, ip, puerto);
 					

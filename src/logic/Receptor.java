@@ -43,6 +43,10 @@ public class Receptor extends Thread {
 			cliente.addFile(cliente, f);
 			
 			
+			socket.close();
+			
+			//Mensaje LIBERA PUERTO?
+			
 		} catch (UnknownHostException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

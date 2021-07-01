@@ -4,7 +4,6 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.OutputStream;
-import java.io.PrintWriter;
 import java.io.Writer;
 import java.net.ConnectException;
 import java.net.Socket;
@@ -15,6 +14,7 @@ import java.nio.file.StandardCopyOption;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
+import java.util.Arrays;
 
 import tiposDeMensajes.Mensaje;
 import tiposDeMensajes.mensajesCliente.Mensaje_Cerrar_Conexion;
@@ -28,6 +28,8 @@ public class Cliente {
 	String path;
 	private String _nombreUsuario;
 	private int _ip;
+	
+	private boolean[] puertosLibres;
 	
 	//Añadir Socket y flujos?
 	private Socket socket; 
@@ -43,6 +45,10 @@ public class Cliente {
 	public Cliente() {
 		try {
 			socket = new Socket("localhost", 1);
+			
+			puertosLibres = new boolean[65535];
+			Arrays.fill(puertosLibres, Boolean.FALSE);
+			
 		} catch (UnknownHostException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -51,6 +57,19 @@ public class Cliente {
 			e.printStackTrace();
 		}
 	}
+	
+	public int puertoLibre() { //Devuelve el primer puerto libre disponible
+		for(int i = 2; i < puertosLibres.length; i++) {
+			if(!puertosLibres[i]) {
+				puertosLibres[i] = true;
+				return i;
+			}
+		}
+		
+		return -1; //No hay puertos libres
+	}
+	
+	
 	
 	public OutputStream output;
 	public ObjectOutputStream objectOutputStream;
