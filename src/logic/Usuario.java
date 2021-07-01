@@ -14,10 +14,9 @@ public class Usuario implements Serializable {
 	private ObjectInputStream _fin;
 	private ObjectOutputStream _fout;
 	
-	public Usuario(String nombre, ObjectInputStream fin, ObjectOutputStream fout) {
+	
+	public Usuario(String nombre) {
 		_nombre = nombre;
-		_fin = fin;
-		_fout = fout;
 		_archivos = new ArrayList<File>();
 		
 		File dir = new File(_nombre);
@@ -28,11 +27,28 @@ public class Usuario implements Serializable {
 		}
 	}
 	
+	
+	public Usuario(String nombre, ObjectInputStream fin, ObjectOutputStream fout) {
+		this(nombre);
+
+		_fin = fin;
+		_fout = fout;
+		
+	}
+	
+	public void setArchivos(ArrayList<File> archivos) {
+		_archivos = archivos;
+	}
+	
 	public ArrayList<File> getArchivos() {
 		return _archivos;
 	}
 	
-	private void getFiles(File dir) {
+	public void vaciaArchivos() {
+		_archivos.clear();
+	}
+	
+	public void getFiles(File dir) {
 		File[] contenido = dir.listFiles();
 		
 		for(File f : contenido)
@@ -51,11 +67,26 @@ public class Usuario implements Serializable {
 		return _fout;
 	}
 	
+	public void setfOut(ObjectOutputStream out) {
+		_fout = out;
+	}
+	
 	public ObjectInputStream getfIn() {
 		return _fin;
 	}
 	
+	public void setfIn(ObjectInputStream in) {
+		_fin = in;
+	}
+	
 	public String toString() {
-		return "Usuario:" + _nombre;
+		String out  = "";
+		out += "Usuario:" + _nombre + " ||| Archivos disponibles --> ";
+		for(File f : _archivos)
+			out += f.getName() + " | ";
+		
+		out += "\n";
+		
+		return out;
 	}
 }

@@ -1,5 +1,8 @@
 package logic;
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.ObjectOutputStream;
 import java.io.OutputStream;
@@ -17,6 +20,7 @@ public class Servidor {
 	//Estructuras de Usuarios
 	private ArrayList<Usuario> usuarios;
 	private ArrayList<String> usuariosNombres; 
+	private ArrayList<String> usuariosRegistrados;
 	//meterle a cada usuario el fin y el fout para poder realizar el pedido de ficheros
 	
 	private ServerSocket serverSocket;
@@ -30,6 +34,36 @@ public class Servidor {
 		//Cambiar por funcion cargaUsuarios que cargue todos los usuarios registrados en un fichero
 		usuarios = new ArrayList<>();
 		usuariosNombres = new ArrayList<>();
+		
+		usuariosRegistrados = new ArrayList<>();
+		cargaUsuariosRegistrados();
+		
+		System.out.println(usuariosRegistrados.toString());
+	}
+	
+	private void cargaUsuariosRegistrados() {
+		
+		BufferedReader reader;
+		
+		try {
+			
+			reader = new BufferedReader(new FileReader("users.txt"));
+			
+			String line = reader.readLine();
+			
+			while (line != null) {
+				usuariosRegistrados.add(line);
+				line = reader.readLine();
+			}
+			
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		
+	}
+	
+	public String getUsuariosRegistrados() {
+		return usuariosRegistrados.toString();
 	}
 	
 	public static void main(String[] args) {
@@ -59,7 +93,26 @@ public class Servidor {
 
 	}
 
+	public synchronized void addUsuarioRegistrado(String usuario) {
+		try
+		{
+		    String filename= "users.txt";
+		    FileWriter fw = new FileWriter(filename, true); //the true will append the new data
+		    fw.write(usuario + "\n"); //appends the string to the file
+		    fw.close();
+		}
+		catch(IOException e)
+		{
+		    System.err.println("IOException: " + e.getMessage());
+		}
+	}
+	
 	public synchronized void cargaUsuario(Usuario u) {
+		if(!usuariosRegistrados.contains(u.getNombre())) {
+			usuariosRegistrados.add(u.getNombre());
+			addUsuarioRegistrado(u.getNombre());
+		}
+		
 		if(!usuariosNombres.contains(u.getNombre())) {
 			usuarios.add(u);
 			usuariosNombres.add(u.getNombre());
@@ -70,10 +123,20 @@ public class Servidor {
 		}
 	}
 	
+
 	public synchronized String listaUsuarios() {		
 		return usuarios.toString();
 	}
 
+	public synchronized void actualizaArchivos(String usuario, ArrayList<File> archivos) {
+		//Probar a buscar el usuario con usuarios.indexOf(u)
+
+		for(Usuario u : usuarios) {
+			if(u.getNombre().equals(usuario))
+				u.setArchivos(archivos);
+		}
+	}
+	
 	public Usuario buscaUsuarioFichero(String fichero) {
 		for(Usuario u : usuarios)
 			for(File f : u.getArchivos())

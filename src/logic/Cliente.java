@@ -17,11 +17,13 @@ import java.util.Scanner;
 import java.util.Arrays;
 
 import tiposDeMensajes.Mensaje;
+import tiposDeMensajes.mensajesCliente.Mensaje_Actualiza_Archivos;
 import tiposDeMensajes.mensajesCliente.Mensaje_Cerrar_Conexion;
 import tiposDeMensajes.mensajesCliente.Mensaje_Conexion;
 import tiposDeMensajes.mensajesCliente.Mensaje_Lista_Usuarios;
 import tiposDeMensajes.mensajesCliente.Mensaje_Pedir_Fichero;
 import tiposDeMensajes.mensajesCliente.Mensaje_Preparado_ClienteServidor;
+import tiposDeMensajes.mensajesCliente.Mensaje_Usuarios_Registrados;
 
 public class Cliente {
 
@@ -86,7 +88,9 @@ public class Cliente {
 			cliente.output = cliente.getSocket().getOutputStream();
 			cliente.objectOutputStream = new ObjectOutputStream(cliente.output);
           
-            cliente.objectOutputStream.writeObject(new Mensaje_Conexion(cliente._nombreUsuario, "servidor"));
+			Usuario u = new Usuario(cliente._nombreUsuario);
+			
+			cliente.objectOutputStream.writeObject(new Mensaje_Conexion(u));
             
             System.out.println("Mensaje de conexion enviado");
             
@@ -96,12 +100,20 @@ public class Cliente {
     		while(!exit) {
     			 //System.in is a standard input stream  
     			
-    			System.out.println("Introduzca la orden que quiera\n 1: Consultar lista usuarios.\n 2: Pedir fichero.\n 3: Salir. ");
+    			System.out.println("Introduzca la orden que quiera\n "
+    					+ "1: Consultar lista usuarios.\n "
+    					+ "2: Pedir fichero.\n "
+    					+ "3: Actualizar ficheros disponibles.\n "
+    					+ "4: Registrar nuevo usuario.\n "
+    					+ "5: Lista Usuarios registrados.\n "
+    					+ "6: a.\n "
+    					+ "7: Salir. ");
     			 in = sc.nextLine();
     			
     			switch(in) {
     			case "1":
-    				//Mensaje lista usuarios
+    				//Mensaje lista usuarios    				
+    				
     				cliente.objectOutputStream.writeObject(new Mensaje_Lista_Usuarios(cliente._nombreUsuario, "servidor"));
 
     				break;
@@ -114,6 +126,34 @@ public class Cliente {
 
     				break;
     			case "3":
+    				//Actualiza Archivos
+    				File dir = new File(cliente._nombreUsuario);
+    				u.vaciaArchivos();
+    				u.getFiles(dir);
+    				
+    				Mensaje_Actualiza_Archivos m = new Mensaje_Actualiza_Archivos(u, u.getArchivos());
+    				m.setUsuario(u);
+    				
+    				cliente.objectOutputStream.writeObject(m);
+    				
+    				break;
+    			case "4":
+    				//Registra Usuario
+    				
+    				
+    				break;
+    			case "5":
+    				//Usuarios registrados
+    				cliente.objectOutputStream.writeObject(new Mensaje_Usuarios_Registrados());
+
+    				break;
+    			
+    			case "6":
+    				//Ejecuta varias acciones
+    				//Sirve para probar a ejecutar multitud de comandos en serie
+    				//Para comprobar que la paralielizaci´pn funciona bien
+    				
+    			case "7":
     				exit = true;
     				cliente.objectOutputStream.writeObject(new Mensaje_Cerrar_Conexion(cliente._nombreUsuario, "servidor"));
 
@@ -123,7 +163,7 @@ public class Cliente {
     				System.err.println("Opción no válida.");
     			}
     			
-    			
+    			cliente.objectOutputStream.reset();
     		}
 			
 			

@@ -91,6 +91,17 @@ public class OyenteServidor extends Thread {
 					System.out.println(m.getOrigen() + " desconectado con éxito");
 					
 					break;
+					
+				case 5:
+					
+					System.out.println(m.getContenido());
+					
+					break;
+					
+				case 7:
+					System.out.println(m.getContenido());
+					
+					break;
 				default:
 					System.out.println("¡Mensaje no válido!");
 						

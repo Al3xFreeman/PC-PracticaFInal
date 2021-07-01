@@ -1,13 +1,13 @@
 package tiposDeMensajes.mensajesCliente;
 
+import logic.Usuario;
 import tiposDeMensajes.Mensaje;
 
 public class Mensaje_Conexion extends Mensaje {
 
-	public Mensaje_Conexion(String o, String d) {
+	public Mensaje_Conexion(Usuario u) {
 		tipo = 0;
-		origen = o;
-		destino = d;
+		user = u;
 	}
 
 }
