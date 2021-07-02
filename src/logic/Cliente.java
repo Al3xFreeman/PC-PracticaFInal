@@ -14,6 +14,7 @@ import java.nio.file.StandardCopyOption;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
+import java.util.concurrent.ThreadLocalRandom;
 import java.util.Arrays;
 
 import tiposDeMensajes.Mensaje;
@@ -60,15 +61,30 @@ public class Cliente {
 		}
 	}
 	
-	public int puertoLibre() { //Devuelve el primer puerto libre disponible
+	public int puertoLibre() { //Devuelve un puerto libre disponible
+		/*
 		for(int i = 2; i < puertosLibres.length; i++) {
 			if(!puertosLibres[i]) {
 				puertosLibres[i] = true;
 				return i;
 			}
 		}
+		*/
 		
-		return -1; //No hay puertos libres
+		int randomPort;
+		
+		while(true) {
+			randomPort = ThreadLocalRandom.current().nextInt(10, 64000 + 1);
+			if(!puertosLibres[randomPort]) {
+				puertosLibres[randomPort] = true;
+				return randomPort;
+			}
+		}
+		//return -1; //No hay puertos libres
+	}
+	
+	public void liberaPuerto(int puerto) {
+		puertosLibres[puerto] = false;
 	}
 	
 	

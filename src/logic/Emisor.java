@@ -40,6 +40,11 @@ public class Emisor  extends Thread {
 			//Enviar el fichero
 			fout.writeObject(file);
 			
+			fout.flush();
+			serverSocket.close();
+			
+			cliente.liberaPuerto(int puerto);
+			
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
