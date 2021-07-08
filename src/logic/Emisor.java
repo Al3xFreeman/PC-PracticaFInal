@@ -30,17 +30,20 @@ public class Emisor  extends Thread {
 		
 		try {
 			//Crear el ServerCocket
+			
+			//Añadir un delay artificial
+			/*
 			try {
 				Thread.sleep(30000);
 			} catch (InterruptedException e1) {
 				// TODO Auto-generated catch block
 				e1.printStackTrace();
 			}
-			
+			*/
 			serverSocket = new ServerSocket(puerto);
 			cliente.enviaMensajePreparadoClienteServidor(cliente, peticion, ip, puerto);
 
-			System.out.println(puerto);
+			//System.out.println(puerto);
 			//aceptar la conexion
 			Socket clientSocket = serverSocket.accept();
 

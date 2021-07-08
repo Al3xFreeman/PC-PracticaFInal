@@ -29,7 +29,7 @@ public class Receptor extends Thread {
 
 		try {
 			//Crear Socket
-			System.out.println(puerto);
+			//System.out.println(puerto);
 			socket = new Socket("localhost", puerto);
 			
 			//Acceder al flujo de entrada

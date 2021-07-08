@@ -104,8 +104,8 @@ public class Servidor {
 			addUsuarioRegistrado.acquire();
 			
 			System.out.println("Registrando nuevo usuario: " + usuario);
-			
-			Thread.sleep(10000);
+			//Añadir un delay artificial
+			//Thread.sleep(10000);
 			
 			String filename= "users.txt";
 		    FileWriter fw = new FileWriter(filename, true); //the true will append the new data
