@@ -22,18 +22,18 @@ public class Servidor {
 	private ArrayList<Usuario> usuarios;
 	private ArrayList<String> usuariosNombres; 
 	private ArrayList<String> usuariosRegistrados;
-	//meterle a cada usuario el fin y el fout para poder realizar el pedido de ficheros
 	
 	private ServerSocket serverSocket;
 	
 	private final Semaphore addUsuarioRegistrado = new Semaphore(1);
+	private final Semaphore conectaUsuario = new Semaphore(1);
+	private volatile boolean entraRegistrado = false;
 	
-	//private OutputStream output = serverSocket.get
+	
 	
 	public Servidor(int port) {
 		this.port = port;
 		
-		//Cambiar por funcion cargaUsuarios que cargue todos los usuarios registrados en un fichero
 		usuarios = new ArrayList<>();
 		usuariosNombres = new ArrayList<>();
 		
@@ -43,6 +43,7 @@ public class Servidor {
 		System.out.println(usuariosRegistrados.toString());
 	}
 	
+	//Al iniciarse el servidor carga la lista de todos los usuarios registrados en el sistema
 	private void cargaUsuariosRegistrados() {
 		
 		BufferedReader reader;
@@ -64,6 +65,7 @@ public class Servidor {
 		
 	}
 	
+	//Devuelve la lista completa de usuarios registrados.
 	public String getUsuariosRegistrados() {
 		return usuariosRegistrados.toString();
 	}
@@ -95,11 +97,15 @@ public class Servidor {
 
 	}
 
+	//Registra un usuario "usuario" a la lista de usuarios registrados.
 	public void addUsuarioRegistrado(String usuario) {
-		
 		try
 		{
 			addUsuarioRegistrado.acquire();
+			
+			System.out.println("Registrando nuevo usuario: " + usuario);
+			
+			Thread.sleep(10000);
 			
 			String filename= "users.txt";
 		    FileWriter fw = new FileWriter(filename, true); //the true will append the new data
@@ -117,11 +123,31 @@ public class Servidor {
 		}
 	}
 	
-	public synchronized void cargaUsuario(Usuario u) {
-		if(!usuariosRegistrados.contains(u.getNombre())) {
-			usuariosRegistrados.add(u.getNombre());
+	//añade un usuario "u" a la lista de usuarios conectados
+	public void cargaUsuario(Usuario u) {
+		
+		//Lock para que solo se compruebe si está registrado o no uno a la vez
+		while(entraRegistrado) {}
+		entraRegistrado = true;
+		boolean registrado = usuariosRegistrados.contains(u.getNombre());
+		usuariosRegistrados.add(u.getNombre());
+		entraRegistrado = false;
+		
+		if(!registrado) {
+			try {
+				Thread.sleep(10000);
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 			addUsuarioRegistrado(u.getNombre());
 		}
+
+		
+		//Semáforo para que solo se añada un usuario a la vez a la base de  datos
+		try {
+			conectaUsuario.acquire();
+		} catch (InterruptedException e) { e.printStackTrace();	}
 		
 		if(!usuariosNombres.contains(u.getNombre())) {
 			usuarios.add(u);
@@ -131,13 +157,16 @@ public class Servidor {
 		} else {
 			System.out.println("Usuario ya estaba conectado");
 		}
+		
+		conectaUsuario.release();
 	}
 	
-
+	//Devuelve la lista de usuarios conectados y sus respectivos ficheros disponibles.
 	public String listaUsuarios() {		
 		return usuarios.toString();
 	}
 
+	//Monitor para actualizar los archivos disponibles para descargar de un usuario.
 	public synchronized void actualizaArchivos(String usuario, ArrayList<File> archivos) {
 		//Probar a buscar el usuario con usuarios.indexOf(u)
 		for(Usuario u : usuarios) {
@@ -146,6 +175,7 @@ public class Servidor {
 		}
 	}
 	
+	//Devuelve el usuario que contenga el fichero "fichero".
 	public Usuario buscaUsuarioFichero(String fichero) {
 		for(Usuario u : usuarios)
 			for(File f : u.getArchivos())
@@ -155,6 +185,7 @@ public class Servidor {
 		return null;
 	}
 
+	//Desconecta el usuario con nombre "usuario".
 	public synchronized void desconectaUsuario(String usuario) {
 		Usuario desconectar = null;
 		
@@ -174,16 +205,19 @@ public class Servidor {
 		}
 	}
 
-	public ObjectOutputStream buscarCliente(String origen) {
+	//Devuelve el Usuario con el nombre "user".
+	public ObjectOutputStream buscarCliente(String user) {
 
 		for(Usuario u : usuarios)
-			if(u.getNombre().equals(origen))
+			if(u.getNombre().equals(user))
 				return u.getfOut();
 		
 		return null;
 		
 	}
 
+	
+	//Devuelve el fichero con el nombre "fichero".
 	public File getFile(String fichero) {
 		for(Usuario u : usuarios)
 			for(File f : u.getArchivos())
@@ -192,25 +226,4 @@ public class Servidor {
 		return null;
 	}
 
-	
-/*
-		ObjectOutputStream objectOutput;
-		try {
-			
-			objectOutput = new ObjectOutputStream(socket.getOutputStream());
-
-			ArrayList<Fichero> listF = new ArrayList<>();
-
-			listF.add(new Fichero());
-
-			for (Fichero f : listF) {
-				objectOutput.writeObject(f);
-				objectOutput.flush();
-			}
-			
-			
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
- */
 }

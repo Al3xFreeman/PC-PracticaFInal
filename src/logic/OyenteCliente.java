@@ -19,15 +19,7 @@ import tiposDeMensajes.mensajesServidor.Mensaje_Fallo;
 import tiposDeMensajes.mensajesServidor.Mensaje_Preparado_ServidorCliente;
 
 public class OyenteCliente extends Thread {
-	//	Proporciona concurrencia para las sesiones de cada usuario con el servidor
-	
-	
-	//	Run se limita a hacer:
-	//		- lecturas del flujo de entrada correspondiente
-	//		- realizar las acciones oportunas
-	//		- devolver los resultados en forma de mensajes 
-	//		  que serán enviados al usuario o usuarios involucrados.
-	
+
 	Socket clientSocket;
 	Servidor servidor;
 	
@@ -67,7 +59,7 @@ public class OyenteCliente extends Thread {
 					//Mensaje Lista Usuarios
 					String msgContents = servidor.listaUsuarios();
 					
-					System.out.println("Usuario ha pedido la lista de usuarios");
+					System.out.println("\"" + m.getOrigen() + "\" ha pedido la lista de usuarios");
 					
 					fout.writeObject(new Mensaje_Confirmacion_Lista_Usuarios(msgContents));
 					
@@ -89,7 +81,7 @@ public class OyenteCliente extends Thread {
 					
 					Usuario usuarioPropietario = servidor.buscaUsuarioFichero(m.getFichero());
 					if(usuarioPropietario == null) {
-						System.out.println("El usuario ha pedido un archivo que no está disponible");
+						System.out.println("\"" + m.getOrigen() + "\" ha pedido un archivo \"" + m.getFichero() + "\" que no está disponible");
 						fout.writeObject(new Mensaje_Fallo("El archivo no está disponible"));
 						break;
 					}
@@ -113,7 +105,7 @@ public class OyenteCliente extends Thread {
 					
 					
 					servidor.buscarCliente(m.getOrigen()).writeObject(new Mensaje_Preparado_ServidorCliente(m.getIp(), m.getPuerto()));
-					System.out.println("Avisando a " + m.getOrigen() + " de que el servidor ya está listo");
+					System.out.println("Avisando a " + m.getOrigen() + " de que el servidor ya está listo en el pueto " + Integer.toString(m.getPuerto()) );
 					
 					break;
 					
@@ -124,16 +116,17 @@ public class OyenteCliente extends Thread {
 					m.getUsuario();
 					
 					System.out.println("Usuario " + m.getUsuario().getNombre() + " está actualizando los ficheros");
-					System.out.println(m.getArchivos().toString());
+					System.out.println("Archivos de " + m.getUsuario().getNombre() + ": " + m.getArchivos().toString());
 					servidor.actualizaArchivos(m.getUsuario().getNombre(), m.getArchivos());
 					
 					fout.writeObject(new Mensaje_Actualiza_Archivos_Confirmacion());
 
 					break;
-				case 6:
+				/*case 6:
 					//Mensaje Registra Usuario
 					
 					break;
+				*/
 				case 7: 
 					//Mensaje Usuarios Registrados
 					fout.writeObject(new Mensaje_Confirmacion_Usuarios_Registrados(servidor.getUsuariosRegistrados()));
@@ -144,9 +137,7 @@ public class OyenteCliente extends Thread {
 					System.out.println("¡Mensaje no válido!");
 						
 				}
-				
-				//fout.reset();
-				
+								
 			}
 			
 		} catch (ClassNotFoundException | IOException e) {

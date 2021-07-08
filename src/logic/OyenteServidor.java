@@ -52,19 +52,15 @@ public class OyenteServidor extends Thread {
 					ip = "192.168.0.1";
 					puerto = cliente.puertoLibre();
 					
-					cliente.enviaMensajePreparadoClienteServidor(cliente, peticion, ip, puerto);
+					//cliente.enviaMensajePreparadoClienteServidor(cliente, peticion, ip, puerto);
 					
 					System.out.println("Preparando servidor P2P para enviar a " + peticion + " el archivo " + file.getName());
 					
 					//Crear proceso EMISOR y esperar en accept la conexion
-					Thread emisor = new Emisor(ip, puerto, cliente, file);
+					Thread emisor = new Emisor(ip, puerto, cliente, file, peticion);
 					
-					try {
-						
-						emisor.start();
-						emisor.join();
-						
-					} catch (InterruptedException e) { e.printStackTrace(); }
+					emisor.start();
+					
 					
 					
 					
@@ -79,12 +75,8 @@ public class OyenteServidor extends Thread {
 					
 					Thread receptor = new Receptor(ip, puerto, cliente);
 					
-					try {
-						
-						receptor.start();
-						receptor.join();
-						
-					} catch (InterruptedException e) { e.printStackTrace(); }
+					receptor.start();
+					//receptor.join();
 					
 					
 					break;

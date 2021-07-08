@@ -61,31 +61,7 @@ public class Cliente {
 		}
 	}
 	
-	public int puertoLibre() { //Devuelve un puerto libre disponible
-		/*
-		for(int i = 2; i < puertosLibres.length; i++) {
-			if(!puertosLibres[i]) {
-				puertosLibres[i] = true;
-				return i;
-			}
-		}
-		*/
-		
-		int randomPort;
-		
-		while(true) {
-			randomPort = ThreadLocalRandom.current().nextInt(10, 64000 + 1);
-			if(!puertosLibres[randomPort]) {
-				puertosLibres[randomPort] = true;
-				return randomPort;
-			}
-		}
-		//return -1; //No hay puertos libres
-	}
-	
-	public void liberaPuerto(int puerto) {
-		puertosLibres[puerto] = false;
-	}
+
 	
 	
 	
@@ -122,7 +98,6 @@ public class Cliente {
     					+ "3: Actualizar ficheros disponibles.\n "
     					+ "4: Registrar nuevo usuario.\n "
     					+ "5: Lista Usuarios registrados.\n "
-    					+ "6: a.\n "
     					+ "7: Salir. ");
     			 in = sc.nextLine();
     			
@@ -194,6 +169,24 @@ public class Cliente {
     	
 	}
 	
+	//Función encargada de asignar puertos libres para las comunicaciones P2P
+		public int puertoLibre() {
+			
+			int randomPort;
+			
+			while(true) {
+				randomPort = ThreadLocalRandom.current().nextInt(10, 64000 + 1);
+				if(!puertosLibres[randomPort]) {
+					puertosLibres[randomPort] = true;
+					return randomPort;
+				}
+			}
+			//return -1; //No hay puertos libres
+		}
+		
+	public void liberaPuerto(int puerto) {
+		puertosLibres[puerto] = false;
+	}
 	
 
 	private String inicioSesion() {
@@ -207,7 +200,7 @@ public class Cliente {
 	}
 
 
-
+	//Desconecta a un cliente "c"
 	public void desconecta(Cliente c) {
 		try {
 			c.socket.close();
@@ -218,6 +211,7 @@ public class Cliente {
 		
 	}
 
+	
 	public void enviaMensajePreparadoClienteServidor(Cliente cliente, String peticion, String ip, int puerto) {
 		try {
 			cliente.objectOutputStream.writeObject(new Mensaje_Preparado_ClienteServidor(peticion, ip, puerto));
@@ -228,16 +222,9 @@ public class Cliente {
 		
 	}
 
-	public Fichero getFichero(String fichero) {
-		//Busca el fichero a devolver
-		//En la carpeta llamada _nombreUsuario -> el nombre de fichero
-		
-		//Contruye el objeto de tipo Fichero
-		return null;
-	}
-
+	//Añade el archivo "f" al sistema de archivos
 	public void addFile(Cliente c, File f) {
-		//Añade el archivo al ssitema de archivos
+		
 		File target = new File(c.getName() + File.separator + f.getName());
 		
 		try {
@@ -256,18 +243,4 @@ public class Cliente {
 		return _nombreUsuario;
 	}
 	
-	/*
-	ObjectInputStream objectInput;
-	try {
-		
-		objectInput = new ObjectInputStream(socket.getInputStream());
-		
-		Fichero f = (Fichero) objectInput.readObject();
-		
-		
-		
-	} catch (IOException | ClassNotFoundException e) {
-		e.printStackTrace();
-	}
-	*/
 }

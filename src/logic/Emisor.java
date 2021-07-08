@@ -12,15 +12,17 @@ public class Emisor  extends Thread {
 	private int puerto;
 	private Cliente cliente;
 	private File file;
+	private String peticion;
 	
 	private ServerSocket serverSocket;
 
 	
-	public Emisor(String ip, int puerto, Cliente c, File f) {
+	public Emisor(String ip, int puerto, Cliente c, File f, String pet) {
 		this.ip = ip;
 		this.puerto = puerto;
 		cliente = c;
 		file = f;
+		peticion = pet;
 	}
 
 	public void run() {
@@ -28,8 +30,17 @@ public class Emisor  extends Thread {
 		
 		try {
 			//Crear el ServerCocket
-			serverSocket = new ServerSocket(puerto);
+			try {
+				Thread.sleep(30000);
+			} catch (InterruptedException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
 			
+			serverSocket = new ServerSocket(puerto);
+			cliente.enviaMensajePreparadoClienteServidor(cliente, peticion, ip, puerto);
+
+			System.out.println(puerto);
 			//aceptar la conexion
 			Socket clientSocket = serverSocket.accept();
 
