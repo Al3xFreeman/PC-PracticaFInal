@@ -15,6 +15,7 @@ import tiposDeMensajes.mensajesServidor.Mensaje_Confirmacion_Conexion;
 import tiposDeMensajes.mensajesServidor.Mensaje_Confirmacion_Lista_Usuarios;
 import tiposDeMensajes.mensajesServidor.Mensaje_Confirmacion_Usuarios_Registrados;
 import tiposDeMensajes.mensajesServidor.Mensaje_Emitir_Fichero;
+import tiposDeMensajes.mensajesServidor.Mensaje_Fallo;
 import tiposDeMensajes.mensajesServidor.Mensaje_Preparado_ServidorCliente;
 
 public class OyenteCliente extends Thread {
@@ -58,7 +59,7 @@ public class OyenteCliente extends Thread {
 					m.getUsuario().setfIn(fin);
 					m.getUsuario().setfOut(fout);
 					servidor.cargaUsuario(m.getUsuario());
-					System.out.println("Cliente conectado\n");
+					System.out.println("Cliente \"" + m.getUsuario().getNombre() + "\" conectado\n");
 					
 					fout.writeObject(new Mensaje_Confirmacion_Conexion("algo"));
 					break;
@@ -76,14 +77,21 @@ public class OyenteCliente extends Thread {
 					exit = true;
 					servidor.desconectaUsuario(m.getOrigen());
 					
+					System.out.println("Cliente \"" + m.getOrigen() + "\" desconectado\n");
+					
 					fout.writeObject(new Mensaje_Confirmacion_Cerrar_Conexion(m.getOrigen()));
 					fout.flush();
 					break;
 				case 3:
 					//Mensaje Pedir Fichero
+					
+					System.out.println("El cliente \"" + m.getOrigen() + "\" ha pedido el archivo \"" + m.getFichero() + "\"\n");
+					
 					Usuario usuarioPropietario = servidor.buscaUsuarioFichero(m.getFichero());
 					if(usuarioPropietario == null) {
-						//Usuario o archivo no encontrado
+						System.out.println("El usuario ha pedido un archivo que no está disponible");
+						fout.writeObject(new Mensaje_Fallo("El archivo no está disponible"));
+						break;
 					}
 					
 					String usuarioPeticion = m.getOrigen();
@@ -102,9 +110,10 @@ public class OyenteCliente extends Thread {
 					//Mensaje Preparado ClienteServidor
 					//Buscar fout1, flujo del cliente al que hay que enviar la info
 					//envio fout1 mensaje MENSAJE_PREPARADP_SERVIDORCLIENTE
-
-					servidor.buscarCliente(m.getOrigen()).writeObject(new Mensaje_Preparado_ServidorCliente(m.getIp(), m.getPuerto()));
 					
+					
+					servidor.buscarCliente(m.getOrigen()).writeObject(new Mensaje_Preparado_ServidorCliente(m.getIp(), m.getPuerto()));
+					System.out.println("Avisando a " + m.getOrigen() + " de que el servidor ya está listo");
 					
 					break;
 					

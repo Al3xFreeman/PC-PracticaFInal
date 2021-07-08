@@ -9,6 +9,7 @@ import java.io.OutputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.ArrayList;
+import java.util.concurrent.Semaphore;
 
 public class Servidor {
 
@@ -25,6 +26,7 @@ public class Servidor {
 	
 	private ServerSocket serverSocket;
 	
+	private final Semaphore addUsuarioRegistrado = new Semaphore(1);
 	
 	//private OutputStream output = serverSocket.get
 	
@@ -93,17 +95,25 @@ public class Servidor {
 
 	}
 
-	public synchronized void addUsuarioRegistrado(String usuario) {
+	public void addUsuarioRegistrado(String usuario) {
+		
 		try
 		{
-		    String filename= "users.txt";
+			addUsuarioRegistrado.acquire();
+			
+			String filename= "users.txt";
 		    FileWriter fw = new FileWriter(filename, true); //the true will append the new data
 		    fw.write(usuario + "\n"); //appends the string to the file
 		    fw.close();
+		    
+		    addUsuarioRegistrado.release();
 		}
 		catch(IOException e)
 		{
 		    System.err.println("IOException: " + e.getMessage());
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
 	}
 	
@@ -124,13 +134,12 @@ public class Servidor {
 	}
 	
 
-	public synchronized String listaUsuarios() {		
+	public String listaUsuarios() {		
 		return usuarios.toString();
 	}
 
 	public synchronized void actualizaArchivos(String usuario, ArrayList<File> archivos) {
 		//Probar a buscar el usuario con usuarios.indexOf(u)
-
 		for(Usuario u : usuarios) {
 			if(u.getNombre().equals(usuario))
 				u.setArchivos(archivos);
@@ -146,7 +155,7 @@ public class Servidor {
 		return null;
 	}
 
-	public void desconectaUsuario(String usuario) {
+	public synchronized void desconectaUsuario(String usuario) {
 		Usuario desconectar = null;
 		
 		usuariosNombres.remove(usuario);

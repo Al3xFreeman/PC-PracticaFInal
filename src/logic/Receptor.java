@@ -42,6 +42,7 @@ public class Receptor extends Thread {
 
 			cliente.addFile(cliente, f);
 			
+			System.out.println("Archivo añadido!");
 			
 			socket.close();
 			

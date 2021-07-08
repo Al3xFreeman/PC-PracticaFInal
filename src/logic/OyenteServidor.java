@@ -6,6 +6,7 @@ import java.net.Socket;
 
 import tiposDeMensajes.Mensaje;
 import tiposDeMensajes.mensajesServidor.Mensaje_Confirmacion_Lista_Usuarios;
+import tiposDeMensajes.mensajesServidor.Mensaje_Confirmacion_Usuarios_Registrados;
 
 public class OyenteServidor extends Thread {
 
@@ -53,6 +54,8 @@ public class OyenteServidor extends Thread {
 					
 					cliente.enviaMensajePreparadoClienteServidor(cliente, peticion, ip, puerto);
 					
+					System.out.println("Preparando servidor P2P para enviar a " + peticion + " el archivo " + file.getName());
+					
 					//Crear proceso EMISOR y esperar en accept la conexion
 					Thread emisor = new Emisor(ip, puerto, cliente, file);
 					
@@ -72,6 +75,8 @@ public class OyenteServidor extends Thread {
 					ip = m.getIp();
 					puerto = m.getPuerto();
 					//Crear proceso RECEPTOR
+					System.out.println("Preprando conexión para recibir el archivo");
+					
 					Thread receptor = new Receptor(ip, puerto, cliente);
 					
 					try {
@@ -93,14 +98,19 @@ public class OyenteServidor extends Thread {
 					break;
 					
 				case 5:
-					
+					//Mensaje_Actualiza_Archivos_Confirmacion
 					System.out.println(m.getContenido());
 					
 					break;
 					
 				case 7:
+					//Mensaje_Confirmacion_Usuarios_Registrados
 					System.out.println(m.getContenido());
 					
+					break;
+				case 8:
+					//Mensaje de fallo
+					System.out.println(m.getContenido());
 					break;
 				default:
 					System.out.println("¡Mensaje no válido!");

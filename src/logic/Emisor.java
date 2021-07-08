@@ -40,10 +40,12 @@ public class Emisor  extends Thread {
 			//Enviar el fichero
 			fout.writeObject(file);
 			
+			System.out.println("Archivo " + file.getName() + " enviado");
+			
 			fout.flush();
 			serverSocket.close();
 			
-			cliente.liberaPuerto(int puerto);
+			cliente.liberaPuerto(puerto);
 			
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
