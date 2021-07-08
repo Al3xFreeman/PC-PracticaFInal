@@ -134,12 +134,16 @@ public class Servidor {
 		entraRegistrado = false;
 		
 		if(!registrado) {
+			//Delay artificial
+			/*
 			try {
 				Thread.sleep(10000);
 			} catch (InterruptedException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
+			*/
+ 
 			addUsuarioRegistrado(u.getNombre());
 		}
 

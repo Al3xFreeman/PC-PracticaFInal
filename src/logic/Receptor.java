@@ -39,11 +39,11 @@ public class Receptor extends Thread {
 			//Recibir información
 			File f = (File) fin.readObject();
 			
-			System.out.println(f.getPath());
+			System.out.println("Ruta de origen de \"" + f.getName() + "\": " + f.getPath());
 
 			cliente.addFile(cliente, f);
 			
-			System.out.println("Archivo añadido!");
+			System.out.println("Archivo \"" + f.getName() + "\" añadido!");
 			
 			socket.close();
 			

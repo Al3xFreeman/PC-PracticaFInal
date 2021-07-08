@@ -105,7 +105,7 @@ public class OyenteCliente extends Thread {
 					
 					
 					servidor.buscarCliente(m.getOrigen()).writeObject(new Mensaje_Preparado_ServidorCliente(m.getIp(), m.getPuerto()));
-					System.out.println("Avisando a " + m.getOrigen() + " de que el servidor ya está listo en el pueto " + Integer.toString(m.getPuerto()) );
+					System.out.println("Avisando a \"" + m.getOrigen() + "\" de que el servidor ya está listo en el pueto " + Integer.toString(m.getPuerto()) );
 					
 					break;
 					
@@ -115,8 +115,8 @@ public class OyenteCliente extends Thread {
 					m.getArchivos();
 					m.getUsuario();
 					
-					System.out.println("Usuario " + m.getUsuario().getNombre() + " está actualizando los ficheros");
-					System.out.println("Archivos de " + m.getUsuario().getNombre() + ": " + m.getArchivos().toString());
+					System.out.println("Usuario \"" + m.getUsuario().getNombre() + "\" está actualizando los ficheros");
+					System.out.println("Archivos de \"" + m.getUsuario().getNombre() + "\": " + m.getArchivos().toString());
 					servidor.actualizaArchivos(m.getUsuario().getNombre(), m.getArchivos());
 					
 					fout.writeObject(new Mensaje_Actualiza_Archivos_Confirmacion());
